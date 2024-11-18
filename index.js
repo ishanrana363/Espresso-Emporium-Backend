@@ -26,6 +26,10 @@ async function run() {
         const database = client.db("emporium");
         const coffeeCollection = database.collection("coffee");
 
+        app.get("/",(req,res)=>{
+            res.send("Welcome to the Emporium API!");
+        })
+
         // POST endpoint to add a coffee item
         app.post("/coffee", async (req, res) => {
             const reqBody = req.body;
