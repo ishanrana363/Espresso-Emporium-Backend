@@ -16,7 +16,8 @@ const client = new MongoClient(uri, {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true,
-    }
+    },
+    socketTimeoutMS: 45000, // Increase timeout to 45 seconds
 });
 
 async function run() {
