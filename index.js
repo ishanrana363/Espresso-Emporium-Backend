@@ -40,6 +40,18 @@ async function run() {
                 res.status(500).send({ error: "Failed to insert coffee" });
             }
         });
+        app.get("/coffee", async (req, res) => {
+            try {
+                const result = await coffeeCollection.find().toArray();
+                res.send(result);
+            } catch (error) {
+                console.error("Error fetching coffee:", error);
+                res.status(500).send({ error: "Failed to fetch coffee" });
+            }
+        });
+
+
+
 
         console.log("Connected to MongoDB and routes are set up!");
     } catch (error) {
