@@ -1,70 +1,58 @@
 const express = require('express');
-const cors = require('cors');
-require("dotenv").config();
-
 const app = express();
+const cors = require('cors');
+require('dotenv').config();
+const port = process.env.PORT || 5000;
 
+// middleware  
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = process.env.MONGO_URI || "mongodb+srv://emproium:qUa1p1FDEmfnFpex@cluster0.zuvfpqu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
+
+
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zuvfpqu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true,
-    },
-    socketTimeoutMS: 45000, // Increase timeout to 45 seconds
+    }
 });
 
 async function run() {
     try {
-        // Connect the client to the server (optional starting in v4.7)
-        await client.connect();
-        const database = client.db("emporium");
-        const coffeeCollection = database.collection("coffee");
+        // Connect the client to the server    (optional starting in v4.7)
+        // await client.connect();
+
+        const contentCollection = client.db('emporium').collection('coffee');
+
+        app.post("/user",async function(req,res){
+            const user = req.body;
+            const result = await contentCollection.insertOne(user);
+            res.send(result);
+        })
+
+        
 
 
 
-        // POST endpoint to add a coffee item
-        app.post("/coffee", async (req, res) => {
-            const reqBody = req.body;
-            try {
-                const result = await coffeeCollection.insertOne(reqBody);
-                res.status(201).send(result);
-            } catch (error) {
-                console.error("Error inserting coffee:", error);
-                res.status(500).send({ error: "Failed to insert coffee" });
-            }
-        });
-        app.get("/coffee", async (req, res) => {
-            try {
-                const result = await coffeeCollection.find().toArray();
-                res.send(result);
-            } catch (error) {
-                console.error("Error fetching coffee:", error);
-                res.status(500).send({ error: "Failed to fetch coffee" });
-            }
-        });
-
-
-
-
-        console.log("Connected to MongoDB and routes are set up!");
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
+        // Send a ping to confirm a successful connection
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+        // Ensures that the client will close when you finish/error
+        // await client.close();
     }
 }
 run().catch(console.dir);
-app.get("/", (req, res) => {
-    res.send("Welcome to the Emporium API!");
-})
 
-const port = process.env.PORT || 3000;
+app.get('/', (req, res) => {
+    res.send('server is ok');
+});
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`server is running on port ${port}`);
 });
