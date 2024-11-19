@@ -43,6 +43,13 @@ async function run() {
             res.send(result);
         });
 
+        app.get("/coffee", async function(req,res){
+            const result = await coffeeCollection.find().toArray();
+            res.send(result);
+        });
+
+        
+
 
 
         
