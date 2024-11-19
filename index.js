@@ -48,7 +48,20 @@ async function run() {
             res.send(result);
         });
 
-        
+        app.put("/coffee/:id", async function(req,res){
+            const id = new ObjectId(req.params.id);
+            const data = req.body;
+            const result = await coffeeCollection.updateOne({_id: id}, {$set: data});
+            res.send(result);
+        });
+
+        app.delete("/coffee/:id", async function(req,res){
+            const id = new ObjectId(req.params.id);
+            const result = await coffeeCollection.deleteOne({_id: id});
+            res.send(result);
+        });
+
+
 
 
 
