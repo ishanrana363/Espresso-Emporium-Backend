@@ -29,11 +29,21 @@ async function run() {
 
         const coffeeCollection = client.db('emporium').collection('coffee');
 
+        // coffe related api
+
         app.post("/coffee",async function(req,res){
             const data = req.body;
             const result = await coffeeCollection.insertOne(data);
             res.send(result);
         });
+
+        app.get("/coffee/:id", async function(req,res){
+            const id = new ObjectId(req.params.id);
+            const result = await coffeeCollection.findOne({_id: id});
+            res.send(result);
+        });
+
+
 
         
 
