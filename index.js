@@ -28,6 +28,7 @@ async function run() {
         // await client.connect();
 
         const coffeeCollection = client.db('emporium').collection('coffee');
+        const userCollection = client.db('emporium').collection('users');
 
         // coffe related api
 
@@ -58,6 +59,14 @@ async function run() {
         app.delete("/coffee/:id", async function(req,res){
             const id = new ObjectId(req.params.id);
             const result = await coffeeCollection.deleteOne({_id: id});
+            res.send(result);
+        });
+
+        // user related api
+
+        app.post("/user", async function(req,res){
+            const data = req.body;
+            const result = await userCollection.insertOne(data);
             res.send(result);
         });
 
