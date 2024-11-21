@@ -75,6 +75,11 @@ async function run() {
             res.send(result);
         });
 
+        app.delete("/user/:id", async function(req,res){
+            const id = new ObjectId(req.params.id);
+            const result = await userCollection.deleteOne({_id: id});
+            res.send(result);
+        });
 
 
         // Send a ping to confirm a successful connection
